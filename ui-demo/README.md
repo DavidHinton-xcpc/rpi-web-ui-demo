@@ -34,7 +34,7 @@ The `diff` tab carries the table with evidence for each row. Summary:
 | verdict  | count | examples |
 | -------- | ----- | -------- |
 | remove   | 5     | "More" in Recent chats, "Workspace user", the refresh icon, the Shift+Enter hint, the lingering/invisible row actions |
-| merge    | 6     | the two "add project" entry points, the duplicated model/thinking dropdowns, the composer metrics strip vs the inspector, the eight toolbar buttons |
+| merge    | 6     | the two "add project" entry points, the duplicated model/thinking dropdowns, the composer metrics strip vs the inspector, the toolbar buttons |
 | relocate | 4     | language, appearance, the preview badge, the Recent-chats block (→ floating window) |
 | keep     | 3     | the per-project `+`, the Ctrl+K shortcut (bind it, don't delete the promise), one panel slot with exclusive entries |
 

@@ -226,11 +226,11 @@ const FINDINGS: Record<Language, Finding[]> = {
     },
     {
       area: "右侧八个工具栏按钮",
-      native: "沉浸 / 分叉 / 克隆 / 搜消息 / 时间轴 / 轨迹 / 诊断 / 文件",
+      native: "沉浸 / 分叉 / 克隆 / 搜索消息 / 时间轴 / 轨迹 / 诊断 / 文件",
       verdict: "merge",
       slim: "六个按钮：四个面板画成互斥单选，会话搜索移到侧栏、运行时入口并入模型菜单",
       evidence:
-        "实测轨迹、诊断、文件、运行时四个面板互斥——渲染进同一个 aside，打开一个会关掉另一个——却画成四个可叠加的开关，这是唯一的实质问题。沉浸式、会话搜索、分叉、克隆、时间轴全部保留；「诊断」的只读统计并入运行时面板（两者本就读写同一份数据），而运行时的入口搬到模型选择菜单顶部——模型选择和上下文/工具状态是同一件事，分开两个入口等于让用户在两处找同一份设置。",
+        "实测轨迹、诊断、文件、运行时四个面板互斥——渲染进同一个 aside，打开一个会关掉另一个——却画成四个可叠加的开关，这是唯一的实质问题。沉浸式、分叉、克隆、时间轴保留；搜索换成跨会话查找并移到侧栏（见下条）；「诊断」的只读统计并入运行时面板（两者本就读写同一份数据），而运行时的入口搬到模型选择菜单顶部——模型选择和上下文/工具状态是同一件事，分开两个入口等于让用户在两处找同一份设置。",
     },
     {
       area: "Ctrl+K 映射到错的东西",
@@ -372,11 +372,11 @@ const FINDINGS: Record<Language, Finding[]> = {
     },
     {
       area: "Eight toolbar buttons",
-      native: "Immersive / fork / clone / search / timeline / trace / inspector / files",
+      native: "Immersive / fork / clone / message search / timeline / trace / inspector / files",
       verdict: "merge",
       slim: "Six buttons: panels are exclusive, chat search moves to the sidebar, runtime opens from the model menu",
       evidence:
-        "Measured: trace, inspector, files and runtime are mutually exclusive — same aside, opening one closes the others — yet they are drawn as four stackable toggles. That is the only real problem. Immersive, chat search, fork, clone and timeline all stay. Inspector's read-only stats fold into the runtime panel (both read the same state), and the runtime entry moves to the top of the composer's model menu — choosing a model and reading its context/tool state is one concern, so two separate entry points made users hunt in both places.",
+        "Measured: trace, inspector, files and runtime are mutually exclusive — same aside, opening one closes the others — yet they are drawn as four stackable toggles. That is the only real problem. Immersive, fork, clone and timeline stay; search becomes cross-session and moves to the sidebar (see next row). Inspector's read-only stats fold into the runtime panel (both read the same state), and the runtime entry moves to the top of the composer's model menu — choosing a model and reading its context/tool state is one concern, so two separate entry points made users hunt in both places.",
     },
     {
       area: "Ctrl+K pointed at the wrong thing",
