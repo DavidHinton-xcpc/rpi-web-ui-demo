@@ -252,8 +252,11 @@
 }
 .slim-badge-count {
   position: absolute;
-  top: -1px;
-  right: -1px;
+  /* Overlapping the archive glyph, not the neighbouring button: full-bleed
+     offsets made it land on the "+" next to it. */
+  top: -3px;
+  right: -3px;
+  pointer-events: none;
   min-width: 13px;
   height: 13px;
   padding: 0 3px;
@@ -265,4 +268,12 @@
   line-height: 13px;
   text-align: center;
   font-variant-numeric: tabular-nums;
+}
+
+/* Badge anchors to the glyph, so it cannot drift onto the adjacent button. */
+.slim .slim-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }

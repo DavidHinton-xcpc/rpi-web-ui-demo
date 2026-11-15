@@ -156,10 +156,12 @@ export function SlimApp({
                 aria-pressed={showArchived}
                 onClick={() => setShowArchived((v) => !v)}
               >
-                <Archive size={14} />
-                {archivedCount > 0 && !showArchived && (
-                  <span className="slim-badge-count">{archivedCount}</span>
-                )}
+                <span className="slim-icon-wrap">
+                  <Archive size={14} />
+                  {archivedCount > 0 && !showArchived && (
+                    <span className="slim-badge-count">{archivedCount}</span>
+                  )}
+                </span>
               </button>
               {!showArchived && (
                 <button
