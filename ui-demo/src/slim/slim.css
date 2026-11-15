@@ -244,3 +244,25 @@
   opacity: 1;
   pointer-events: auto;
 }
+
+/* Archived filter: a count badge on the toggle so the set is not invisible when
+   the view is off. */
+.slim .project-section-heading .icon-button {
+  position: relative;
+}
+.slim-badge-count {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  min-width: 13px;
+  height: 13px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: var(--muted);
+  color: var(--bg);
+  font-size: 8.5px;
+  font-weight: 600;
+  line-height: 13px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}

@@ -180,7 +180,7 @@ const FINDINGS: Record<Language, Finding[]> = {
       area: "「工作区用户」头像块",
       native: "U 头像 + Workspace user + 主题按钮 + 登出",
       verdict: "remove",
-      slim: "移除。未启用密码时整块无意义",
+      slim: "移除。未启用密码时整块无意义；归档移到项目标题栏",
       evidence:
         "account-name 永远是 i18n 里的固定字符串「工作区用户」，不是真实账号。整块只在 authRequired 时提供登出，其余时间是装饰。登出应放进设置。",
     },
@@ -228,9 +228,9 @@ const FINDINGS: Record<Language, Finding[]> = {
       area: "右侧八个工具栏按钮",
       native: "沉浸 / 分叉 / 克隆 / 搜消息 / 时间轴 / 轨迹 / 诊断 / 文件",
       verdict: "merge",
-      slim: "保留六个（分叉 / 克隆 / 时间轴 / 轨迹 / 运行时 / 文件）",
+      slim: "仍是八个按钮，但四个面板画成互斥单选，诊断并入运行时",
       evidence:
-        "实测轨迹、诊断、文件、运行时四个面板互斥——渲染进同一个 aside，打开一个会关掉另一个——却给了四个并列按钮，画成可叠加的开关。删两个：沉浸式（与收起侧栏效果重叠）、搜消息（被最近会话浮窗的 Ctrl K 取代）。分叉/克隆/时间轴保留。",
+        "实测轨迹、诊断、文件、运行时四个面板互斥——渲染进同一个 aside，打开一个会关掉另一个——却画成四个可叠加的开关，这是唯一的实质问题。沉浸式、消息搜索、分叉、克隆、时间轴全部保留；「诊断」不再是独立按钮，它的只读统计并入「运行时」面板，因为两者本就读写同一份数据。",
     },
     {
       area: "Ctrl+K 是假的",
@@ -326,7 +326,7 @@ const FINDINGS: Record<Language, Finding[]> = {
       area: "\"Workspace user\" block",
       native: "U avatar + \"Workspace user\" + theme button + sign out",
       verdict: "remove",
-      slim: "Removed; sign-out moves into Settings",
+      slim: "Removed; sign-out moves to Settings, archive to the project heading",
       evidence:
         "account-name is a fixed i18n string, not a real account. The block only does something (logout) when a password is configured.",
     },
@@ -374,9 +374,9 @@ const FINDINGS: Record<Language, Finding[]> = {
       area: "Eight toolbar buttons",
       native: "Immersive / fork / clone / search / timeline / trace / inspector / files",
       verdict: "merge",
-      slim: "Six remain (fork / clone / timeline / trace / runtime / files)",
+      slim: "Still eight buttons, but the panels are exclusive and inspector folds into runtime",
       evidence:
-        "Measured: trace, inspector, files and runtime are mutually exclusive — same aside, opening one closes the others — yet they are drawn as four stackable toggles. Two are dropped: immersive (overlaps collapsing the sidebar) and message search (replaced by Ctrl K on the recent-chats window). Fork, clone and timeline stay.",
+        "Measured: trace, inspector, files and runtime are mutually exclusive — same aside, opening one closes the others — yet they are drawn as four stackable toggles. That is the only real problem. Immersive, search, fork, clone and timeline all stay; the separate inspector button goes away and its read-only stats move into the runtime panel, since the two already read and write the same state.",
     },
     {
       area: "Ctrl+K is not wired",

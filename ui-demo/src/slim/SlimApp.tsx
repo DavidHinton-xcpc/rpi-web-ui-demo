@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  Archive,
   ArrowUp,
   Check,
   ChevronDown,
@@ -7,11 +8,14 @@ import {
   Copy,
   Folder,
   GitBranch,
+  Maximize2,
+  Minus,
   MoreHorizontal,
   PanelLeft,
   Paperclip,
   Pin,
   Plus,
+  Search,
   Clock3,
   Database,
   Gauge,
@@ -25,7 +29,7 @@ import {
 import { type Language, projects, sessions, supports, transcript } from "../data";
 import { Mark, ToolRow } from "../shared";
 import { RecentChats } from "./RecentChats";
-import { TimelineRail } from "../native/NativePanels";
+import { MessageSearchPopover, TimelineRail } from "../native/NativePanels";
 import "./slim.css";
 
 /**
@@ -65,6 +69,10 @@ export function SlimApp({
   // Timeline and message search are independent overlays in the original too;
   // only the right-hand rail is exclusive.
   const [timelineOpen, setTimelineOpen] = useState(false);
+  // Restored from the original: archive view, immersive mode, message search.
+  const [showArchived, setShowArchived] = useState(false);
+  const [immersive, setImmersive] = useState(false);
+  const [messageSearchOpen, setMessageSearchOpen] = useState(false);
 
   // Ctrl / ⌘ K is advertised in Settings; here it actually opens the recent
   // chats window instead of doing nothing.
@@ -81,19 +89,26 @@ export function SlimApp({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const ordered = [...sessions].sort(
+  // Archived is a filter over the same tree, not a separate list: the heading
+  // says which set you are looking at and the toggle flips it.
+  const visible = sessions.filter((s) => Boolean(s.archived) === showArchived);
+  const ordered = [...visible].sort(
     (a, b) =>
       Number(Boolean(b.pinned)) - Number(Boolean(a.pinned)) ||
       b.updatedAt - a.updatedAt,
   );
   const current = sessions.find((s) => s.id === activeId) ?? sessions[0];
+  const projectsShown = projects.filter((project) =>
+    ordered.some((s) => s.projectId === project.id),
+  );
+  const archivedCount = sessions.filter((s) => s.archived).length;
 
   return (
     <div
-      className={`workspace slim${dark ? " demo-dark" : ""}`}
+      className={`workspace slim${immersive ? " workspace--immersive" : ""}${dark ? " demo-dark" : ""}`}
       data-slim
     >
-      <aside className="sidebar open">
+      {!immersive && <aside className="sidebar open">
         <div className="sidebar-brand">
           <Mark /> <span>rpi</span>
         </div>
@@ -122,18 +137,40 @@ export function SlimApp({
           </div>
 
           <div className="project-section-heading">
-            <span>{zh ? "项目" : "Projects"}</span>
-            {/* One "add project" affordance, next to the section it belongs to.
-                The bottom-of-sidebar duplicate is gone. */}
+            <span>{showArchived ? (zh ? "已归档" : "Archived") : zh ? "项目" : "Projects"}</span>
+            {/* Restored: the archive view filters this same tree in place, so it
+                lives on the section heading rather than in a separate screen. */}
             <div>
               <button
-                className="icon-button"
-                aria-label={zh ? "新建项目" : "New project"}
-                title={zh ? "新建项目" : "New project"}
-                onClick={() => setProjectDialog(true)}
+                className={`icon-button ${showArchived ? "selected" : ""}`}
+                aria-label={
+                  showArchived
+                    ? zh ? "返回项目" : "Show projects"
+                    : zh ? "查看已归档" : "Show archived chats"
+                }
+                title={
+                  showArchived
+                    ? zh ? "已归档项目和会话" : "Archived projects and chats"
+                    : zh ? "查看已归档项目和会话" : "Show archived projects and chats"
+                }
+                aria-pressed={showArchived}
+                onClick={() => setShowArchived((v) => !v)}
               >
-                <Plus size={16} />
+                <Archive size={14} />
+                {archivedCount > 0 && !showArchived && (
+                  <span className="slim-badge-count">{archivedCount}</span>
+                )}
               </button>
+              {!showArchived && (
+                <button
+                  className="icon-button"
+                  aria-label={zh ? "新建项目" : "New project"}
+                  title={zh ? "新建项目" : "New project"}
+                  onClick={() => setProjectDialog(true)}
+                >
+                  <Plus size={16} />
+                </button>
+              )}
             </div>
           </div>
 
@@ -141,7 +178,7 @@ export function SlimApp({
             className="project-tree slim-tree"
             aria-label={zh ? "项目与会话" : "Projects and chats"}
           >
-            {projects.map((project) => {
+            {projectsShown.map((project) => {
               const chats = ordered.filter((s) => s.projectId === project.id);
               const expanded = !collapsed.has(project.id);
               const isActiveProject = project.id === activeProject;
@@ -242,11 +279,24 @@ export function SlimApp({
             <kbd>Ctrl ,</kbd>
           </button>
         </div>
-      </aside>
+      </aside>}
 
-      <div className="workspace-splitter" role="separator" aria-orientation="vertical" />
+      {!immersive && (
+        <div className="workspace-splitter" role="separator" aria-orientation="vertical" />
+      )}
 
       <section className="main-shell">
+        {immersive && (
+          <button
+            type="button"
+            className="icon-button immersive-exit"
+            aria-label={zh ? "退出沉浸式查看" : "Exit immersive view"}
+            title={zh ? "退出沉浸式查看" : "Exit immersive view"}
+            onClick={() => setImmersive(false)}
+          >
+            <Minus size={17} aria-hidden="true" />
+          </button>
+        )}
         <header className="toolbar">
           <div className="toolbar-left">
             <button className="icon-button" aria-label={zh ? "切换侧边栏" : "Toggle sidebar"}>
@@ -267,6 +317,29 @@ export function SlimApp({
               chrome) and message search (moved to the Recent-chats window's
               sibling shortcut, Ctrl / ⌘ K). */}
           <div className="toolbar-actions">
+            {/* Restored from the original: immersive reading mode and message
+                search. Immersive is a mode (stays pressed, hides the chrome),
+                search is an overlay that can sit alongside a panel. */}
+            <button
+              type="button"
+              className={`icon-button ${immersive ? "selected" : ""}`}
+              aria-label={zh ? "沉浸式查看" : "Immersive view"}
+              title={zh ? "沉浸式查看" : "Immersive view"}
+              aria-pressed={immersive}
+              onClick={() => setImmersive((v) => !v)}
+            >
+              {immersive ? <Minus size={17} /> : <Maximize2 size={17} />}
+            </button>
+            <button
+              type="button"
+              className={`icon-button ${messageSearchOpen ? "selected" : ""}`}
+              aria-label={zh ? "搜索消息" : "Search messages"}
+              title={zh ? "搜索消息" : "Search messages"}
+              aria-pressed={messageSearchOpen}
+              onClick={() => setMessageSearchOpen((v) => !v)}
+            >
+              <Search size={17} />
+            </button>
             <button
               type="button"
               className="icon-button toolbar-fork"
@@ -327,6 +400,7 @@ export function SlimApp({
         <main className="main-content chat-layout">
           <div className="conversation-column">
             <div className="transcript-frame">
+              {messageSearchOpen && <MessageSearchPopover language={language} />}
               {timelineOpen && <TimelineRail language={language} />}
               <div className="transcript">
                 <div className="message-list">

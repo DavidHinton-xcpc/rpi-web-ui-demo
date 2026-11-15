@@ -101,6 +101,20 @@ export const sessions: Session[] = [
     updatedAt: now - min(4600),
   },
   { id: "s14", projectId: "rpi-web", title: "New session", updatedAt: now - min(120), pinned: true },
+  {
+    id: "s15",
+    projectId: "pi-rust",
+    title: "Old experiment with the connection pool",
+    updatedAt: now - min(9000),
+    archived: true,
+  },
+  {
+    id: "s16",
+    projectId: "task",
+    title: "Archived draft of the weekly summary",
+    updatedAt: now - min(11000),
+    archived: true,
+  },
 ];
 
 export type TranscriptRow =

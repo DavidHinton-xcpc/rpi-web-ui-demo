@@ -91,6 +91,9 @@ not inferred from screenshots:
 ## What the slim variant changes
 
 - One footer entry (Settings). Language and appearance live there only.
+- Archive and immersive view are kept. Archive is a filter over the same project
+  tree (toggled from the Projects heading, with a count badge) rather than a
+  separate screen, so the tree keeps its position while the set changes.
 - Recent chats becomes a small floating window (same chrome as the
   message-search card) opened from a sidebar button or `Ctrl / ⌘ K` — the
   shortcut Settings already advertised but never bound. It sits beside the
@@ -101,11 +104,12 @@ not inferred from screenshots:
 - The composer keeps model/thinking and send, drops the shift+enter tutorial and
   the single-value `steer` dropdown, and collapses ten always-on metrics into
   two plus a "details" jump into the runtime panel.
-- Six toolbar buttons instead of eight: fork, clone, timeline, then the three
-  right-hand panels (trace / runtime / files) rendered as exclusive selections
-  rather than stackable toggles. Two are dropped — immersive view (overlaps the
-  sidebar toggle) and message search (replaced by Ctrl K on the recent-chats
-  window). Fork, clone and the timeline are deliberately kept.
+- The same eight toolbar entries as the original — immersive view, message
+  search, fork, clone, timeline, trace, runtime, files. What changes is how the
+  four right-hand panels behave: they are rendered as exclusive selections
+  instead of stackable toggles. The separate inspector button is gone because
+  its read-only statistics now live inside the runtime panel, which already read
+  the same state.
 - No fake account block, no refresh icon, no preview badge.
 - Row actions (`+`, `…`) get `pointer-events: none` while hidden, and keyboard
   reveal keys off `:has(:focus-visible)` instead of `:focus-within`, so a click
@@ -118,6 +122,20 @@ not inferred from screenshots:
 Measured chrome reduction at 1440×900: sidebar buttons 60 → 32, toolbar buttons
 8 → 6, session rows in the sidebar 19 → 8 (the recent list now lives in the
 window, so it no longer occupies permanent height).
+
+## The rpi mark
+
+`public/rpi-mark.svg` is the logo from the project README
+(`docs/images/rpi-logo.jpg`, 600x600 shown at `width="240"`), traced with
+potrace into a single vector path. It is painted through `mask-image` with
+`background-color: currentColor`, so one file serves both themes and the mark
+follows the surrounding text colour.
+
+It sits at 82% of its tile, measured at 3x across 0.62–0.9: full bleed traced
+the gear to the very edge, smaller ratios lost the "rpi" lettering. Size itself
+comes from the existing stylesheet, which already distinguishes the 25px
+sidebar tile from the 21px message avatar — the gear plus lettering is detailed
+enough that it needs that room.
 
 ## Deliberately unchanged
 
@@ -137,7 +155,7 @@ window, so it no longer occupies permanent height).
 ```
 src/
   data.ts              fixed dataset + transcript
-  shared.tsx           brand mark, tool row
+  shared.tsx           traced rpi mark, tool row
   App.tsx              shell, view switch, findings table
   shell.css            header + diff view
   native/

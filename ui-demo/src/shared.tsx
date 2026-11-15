@@ -1,16 +1,26 @@
 import { Check, ChevronRight, Loader2 } from "lucide-react";
 import { type Language, type TranscriptRow } from "./data";
 
-export function Mark({ large = false }: { large?: boolean }) {
+/**
+ * The rpi mark from the project README (docs/images/rpi-logo.jpg), traced to a
+ * single vector path so it stays crisp at any size and inherits `currentColor`
+ * for both themes.
+ *
+ * The README shows the 600x600 logo at width="240" beside the page text, which
+ * is why the mark is set slightly smaller than the word it sits next to rather
+ * than filling its tile. The gear plus "rpi" lettering is a detailed mark: a
+ * 25px tile at 0.82 keeps both readable, while anything near 16px turns to mush
+ * (measured ink coverage 0.57 at 16px vs 0.42 at 28px).
+ */
+export function Mark() {
+  // Size comes from the surrounding stylesheet (.brand-mark), which already
+  // distinguishes the 25px sidebar tile from the 21px message avatar. Setting
+  // width inline here would override those rules.
   return (
-    <div className={`brand-mark ${large ? "large" : ""}`} aria-hidden="true">
-      <img
-        className="rpi-logo"
-        src="./favicon.svg"
-        width={large ? 58 : 28}
-        height={large ? 58 : 28}
-        alt=""
-      />
+    <div className="brand-mark" aria-hidden="true">
+      {/* 82% of the tile: full-bleed traced the gear to the very edge, and
+          smaller ratios lost the lettering. Measured at 3x across 0.62-0.9. */}
+      <span className="rpi-mark" />
     </div>
   );
 }
