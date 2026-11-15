@@ -98,9 +98,10 @@ not inferred from screenshots:
   the sidebar rather than over it, so the tree stays usable, and Escape /
   outside click / picking a row all close it.
 - **Chat search** is a separate function: it finds *sessions* across projects,
-  not messages inside the open conversation. It matches session titles, project
-  names and tags, is opened from the toolbar or `Ctrl / ⌘ K` (the shortcut
-  Settings advertises but the original never binds), and is keyboard navigable
+  not messages inside the open conversation. It sits in the sidebar directly
+  above Recent chats, matches session titles, project names and tags, is opened
+  by clicking or `Ctrl / ⌘ K` (the shortcut Settings advertises but the original
+  never binds), and is keyboard navigable
   (arrows, Enter, Escape). A hit in a collapsed project or the archived set
   switches that view on so the row is visible. The original build's
   message search only looks inside one conversation — a different feature.
@@ -110,8 +111,9 @@ not inferred from screenshots:
   the single-value `steer` dropdown, and collapses ten always-on metrics into
   two plus a "details" jump into the runtime panel. That jump stays next to the
   numbers it explains; the model menu is the other way in.
-- Seven toolbar entries: immersive view, chat search, fork, clone, timeline,
-  trace, files. The four right-hand panels are rendered as exclusive selections
+- Six toolbar entries: immersive view, fork, clone, timeline, trace, files.
+  Chat search lives in the sidebar with the session list, not in the
+  conversation toolbar. The four right-hand panels are rendered as exclusive selections
   instead of stackable toggles, and the separate inspector button is gone because
   its read-only statistics now live inside the runtime panel.
 - Runtime settings moves to the top of the composer's model menu. Choosing a
@@ -144,11 +146,13 @@ potrace into a single vector path. It is painted through `mask-image` with
 `background-color: currentColor`, so one file serves both themes and the mark
 follows the surrounding text colour.
 
-It sits at 82% of its tile, measured at 3x across 0.62–0.9: full bleed traced
-the gear to the very edge, smaller ratios lost the "rpi" lettering. Size itself
-comes from the existing stylesheet, which already distinguishes the 25px
-sidebar tile from the 21px message avatar — the gear plus lettering is detailed
-enough that it needs that room.
+It fills 92% of its tile (4% inset), measured at 4x across several insets: at a
+smaller size the round gear reads lighter than the "rpi" letters next to it.
+Size itself comes from the existing stylesheet, which already distinguishes the
+25px sidebar tile from the 21px message avatar — the gear plus lettering is
+detailed enough that it needs that room. The gear's ink centroid sits 1.5% below
+its geometric centre, so it gets a small 3% lift to align optically with the
+text; geometry alone already centred them (measured delta 0 at 3x).
 
 ## Deliberately unchanged
 

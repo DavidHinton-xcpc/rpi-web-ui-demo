@@ -129,11 +129,32 @@ export function SlimApp({
               <span>{zh ? "新建会话" : "New session"}</span>
               <kbd>Ctrl N</kbd>
             </button>
+            {/* Session search sits above Recent chats in the sidebar. Finding a
+                chat is a primary navigation action, so it belongs with the tree
+                rather than in the conversation toolbar. */}
+            <button
+              className={`sidebar-new-chat slim-search slim-chat-search-trigger${chatSearchOpen ? " active" : ""}`}
+              aria-label={zh ? "搜索会话" : "Search chats"}
+              title={
+                zh
+                  ? "搜索会话（标题 / 项目 / 标签）"
+                  : "Search chats (title, project, tag)"
+              }
+              aria-expanded={chatSearchOpen}
+              onClick={() => {
+                setRecentOpen(false);
+                setChatSearchOpen((open) => !open);
+              }}
+            >
+              <Search size={16} />
+              <span>{zh ? "搜索会话" : "Search chats"}</span>
+              <kbd>Ctrl K</kbd>
+            </button>
             {/* Recent chats, but as a small floating window instead of a
                 permanent block that duplicates the project tree 1:1. The whole
                 vertical space goes to the tree; the window is opt-in. */}
             <button
-              className={`sidebar-new-chat slim-search${recentOpen ? " active" : ""}`}
+              className={`sidebar-new-chat slim-recent-trigger${recentOpen ? " active" : ""}`}
               aria-expanded={recentOpen}
               onClick={() => {
                 setChatSearchOpen(false);
@@ -318,13 +339,11 @@ export function SlimApp({
               <h1 title={current.title}>{current.title}</h1>
             </div>
           </div>
-          {/* Immersive, chat search, fork, clone, timeline, then the exclusive
-              panels. Chat search finds sessions across all projects — the thing
-              Settings promises with Ctrl / ⌘ K — as opposed to the original's
-              message search, which only looks inside the open conversation. */}
+          {/* Immersive, fork, clone, timeline, then the exclusive panels.
+              Chat search lives in the sidebar with the session list, not in the
+              conversation toolbar. */}
           <div className="toolbar-actions">
-            {/* Immersive is a mode (stays pressed, hides the chrome); chat
-                search is an overlay that can sit alongside a panel. */}
+            {/* Immersive is a mode (stays pressed, hides the chrome). */}
             <button
               type="button"
               className={`icon-button ${immersive ? "selected" : ""}`}
@@ -334,20 +353,6 @@ export function SlimApp({
               onClick={() => setImmersive((v) => !v)}
             >
               {immersive ? <Minus size={17} /> : <Maximize2 size={17} />}
-            </button>
-            <button
-              type="button"
-              className={`icon-button ${chatSearchOpen ? "selected" : ""}`}
-              aria-label={zh ? "搜索会话" : "Search chats"}
-              title={zh ? "搜索会话（标题 / 项目 / 标签）" : "Search chats (title, project, tag)"}
-              aria-pressed={chatSearchOpen}
-              aria-expanded={chatSearchOpen}
-              onClick={() => {
-                setRecentOpen(false);
-                setChatSearchOpen((v) => !v);
-              }}
-            >
-              <Search size={17} />
             </button>
             <button
               type="button"

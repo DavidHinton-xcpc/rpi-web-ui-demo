@@ -106,15 +106,16 @@
 .slim-search {
   color: var(--muted);
 }
-.slim-search.active {
+.slim-search.active,
+.slim-recent-trigger.active {
   background: var(--hover);
   color: var(--text);
 }
 .slim-recent {
   position: fixed;
-  /* Sit beside the sidebar, not over it: the tree stays fully usable while the
-     window is open, which is the point of making it a window. */
-  top: 60px;
+  /* Sit beside the sidebar, aligned with its own trigger row (third entry,
+     y≈173), not over the tree. */
+  top: 173px;
   left: calc(var(--sidebar-width, 248px) + 8px);
   z-index: 100;
   display: flex;
@@ -309,10 +310,11 @@
    a session list with the match context (project, tags, archived/running). */
 .slim-chat-search {
   position: fixed;
-  /* Beside the sidebar, not over it: the sidebar's "Recent chats" button sits
-     at y=136 and was being intercepted when this panel anchored at left:12.
-     Match the recent-chats window's anchor so the whole tree stays usable. */
-  top: 60px;
+  /* Beside the sidebar, aligned with its own trigger row (the second entry in
+     .sidebar-primary-actions, y≈136). Anchoring at the very top left the panel
+     visually detached from the button that opened it. The recent-chats window
+     uses the same anchor so the two never cover each other's trigger. */
+  top: 136px;
   left: calc(var(--sidebar-width, 248px) + 8px);
   z-index: 100;
   display: flex;
