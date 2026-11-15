@@ -92,8 +92,8 @@ not inferred from screenshots:
 
 - One footer entry (Settings). Language and appearance live there only.
 - Archive and immersive view are kept. Archive is a filter over the same project
-  tree (toggled from the Projects heading, with a count badge) rather than a
-  separate screen, so the tree keeps its position while the set changes.
+  tree (toggled from the Projects heading) rather than a separate screen, so the
+  tree keeps its position while the set changes. No count badge is shown.
 - Recent chats becomes a small floating window (same chrome as the
   message-search card) opened from a sidebar button or `Ctrl / ⌘ K` — the
   shortcut Settings already advertised but never bound. It sits beside the
@@ -114,6 +114,10 @@ not inferred from screenshots:
   reached from the same control that picks the model rather than from a separate
   toolbar button. The menu is keyboard-navigable (ArrowDown opens it, arrows walk
   the runtime row and the model rows as one list, Enter chooses).
+  The panel itself is the **full** runtime panel, not a summary: read-aloud
+  toggle, provider management, model and thinking selects, context meter with
+  the compaction note, and the per-tool enable checklist. Only the entry point
+  moved; the diagnostics stay.
 - No fake account block, no refresh icon, no preview badge.
 - Row actions (`+`, `…`) get `pointer-events: none` while hidden, and keyboard
   reveal keys off `:has(:focus-visible)` instead of `:focus-within`, so a click
@@ -169,6 +173,7 @@ src/
   slim/
     SlimApp.tsx        reduced chrome
     ModelMenu.tsx      model picker with the runtime entry on top
+    RuntimePanel.tsx   the full runtime panel
     RecentChats.tsx    the floating recent-chats window (Ctrl / ⌘ K)
     slim.css           only the new nodes
 ```

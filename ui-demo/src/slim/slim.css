@@ -74,31 +74,25 @@
   text-decoration: underline;
 }
 
-/* The right-hand rail is one panel at a time; keep it out of the flex flow so
-   the transcript width does not jump between panels. */
+/* The right-hand rail is one panel at a time. It takes layout space instead of
+   floating over the transcript, matching the original build: measured there the
+   aside occupies 1140..1440 and the conversation column ends at 1139, so the
+   text is never covered. An earlier version positioned it absolutely to avoid
+   the column resizing; the column resizing is correct behaviour, covering the
+   text was not. */
 .slim .chat-layout {
   position: relative;
+  align-items: stretch;
 }
 .slim-inspector {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 12;
   width: 300px;
-  flex: none;
-  box-shadow: -14px 0 28px -22px #0009;
+  flex: 0 0 300px;
+  align-self: stretch;
 }
 .slim-note {
   margin-top: 16px;
   font-size: 11px;
   line-height: 1.75;
-}
-.slim .conversation-column {
-  padding-right: 0;
-}
-.slim .transcript-frame {
-  padding-right: 0;
 }
 
 /* Sidebar bottom row for the slim variant: one line, nothing else. */
@@ -245,38 +239,7 @@
   pointer-events: auto;
 }
 
-/* Archived filter: a count badge on the toggle so the set is not invisible when
-   the view is off. */
-.slim .project-section-heading .icon-button {
-  position: relative;
-}
-.slim-badge-count {
-  position: absolute;
-  /* Overlapping the archive glyph, not the neighbouring button: full-bleed
-     offsets made it land on the "+" next to it. */
-  top: -3px;
-  right: -3px;
-  pointer-events: none;
-  min-width: 13px;
-  height: 13px;
-  padding: 0 3px;
-  border-radius: 999px;
-  background: var(--muted);
-  color: var(--bg);
-  font-size: 8.5px;
-  font-weight: 600;
-  line-height: 13px;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-}
 
-/* Badge anchors to the glyph, so it cannot drift onto the adjacent button. */
-.slim .slim-icon-wrap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
 
 /* Model picker: the runtime entry sits at the top of the same menu, separated
    from the model list by the stock .dropdown-group divider. */
@@ -320,4 +283,23 @@
 /* Keyboard/pointer highlight for the flat row list (runtime row included). */
 .slim-model-menu .dropdown-item[data-active="true"] {
   background: var(--hover);
+}
+
+/* Runtime panel: the model/thinking selects open a popover inside the panel,
+   which scrolls, so it is anchored to the trigger rather than fixed. */
+.slim .select-menu {
+  position: relative;
+  width: 100%;
+}
+.slim-rt-popover {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+}
+/* Tool checklist rows reuse .stat-row so they line up with the stats above. */
+.slim .slim-tool-row input {
+  accent-color: var(--blue);
+  margin: 0;
 }

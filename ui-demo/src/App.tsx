@@ -212,7 +212,7 @@ const FINDINGS: Record<Language, Finding[]> = {
       area: "运行时面板 vs 输入框",
       native: "右侧面板的 Model / Thinking 下拉，与输入框下方两个下拉完全重复",
       verdict: "merge",
-      slim: "面板只读诊断，选择只在模型菜单；入口也在该菜单顶部",
+      slim: "面板保留完整内容，入口移到模型菜单顶部；选择只在菜单里",
       evidence:
         "两边都调用 set_model / set_thinking_level，是同一份状态的两个控件。输入框下方的更靠近发送动作，应保留；右侧改成只读。",
     },
@@ -228,7 +228,7 @@ const FINDINGS: Record<Language, Finding[]> = {
       area: "右侧八个工具栏按钮",
       native: "沉浸 / 分叉 / 克隆 / 搜消息 / 时间轴 / 轨迹 / 诊断 / 文件",
       verdict: "merge",
-      slim: "七个按钮：四个面板画成互斥单选，运行时入口并入模型菜单顶部",
+      slim: "七个按钮：四个面板画成互斥单选，运行时面板改由模型菜单顶部进入",
       evidence:
         "实测轨迹、诊断、文件、运行时四个面板互斥——渲染进同一个 aside，打开一个会关掉另一个——却画成四个可叠加的开关，这是唯一的实质问题。沉浸式、消息搜索、分叉、克隆、时间轴全部保留；「诊断」的只读统计并入运行时面板（两者本就读写同一份数据），而运行时的入口搬到模型选择菜单顶部——模型选择和上下文/工具状态是同一件事，分开两个入口等于让用户在两处找同一份设置。",
     },
@@ -358,7 +358,7 @@ const FINDINGS: Record<Language, Finding[]> = {
       area: "Runtime panel vs composer",
       native: "Model / Thinking dropdowns exist in the panel and under the composer",
       verdict: "merge",
-      slim: "Panel read-only; the menu owns both the choice and the runtime entry",
+      slim: "Panel keeps everything; the menu owns the choice and the entry point",
       evidence:
         "Both drive set_model / set_thinking_level — one state, two controls. The one next to the send action should own the choice.",
     },
@@ -374,7 +374,7 @@ const FINDINGS: Record<Language, Finding[]> = {
       area: "Eight toolbar buttons",
       native: "Immersive / fork / clone / search / timeline / trace / inspector / files",
       verdict: "merge",
-      slim: "Seven buttons: panels are exclusive, runtime moves into the model menu",
+      slim: "Seven buttons: panels are exclusive, runtime opens from the model menu",
       evidence:
         "Measured: trace, inspector, files and runtime are mutually exclusive — same aside, opening one closes the others — yet they are drawn as four stackable toggles. That is the only real problem. Immersive, search, fork, clone and timeline all stay. Inspector's read-only stats fold into the runtime panel (both read the same state), and the runtime entry moves to the top of the composer's model menu — choosing a model and reading its context/tool state is one concern, so two separate entry points made users hunt in both places.",
     },

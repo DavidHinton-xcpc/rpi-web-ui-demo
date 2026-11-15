@@ -31,6 +31,7 @@ import { Mark, ToolRow } from "../shared";
 import { RecentChats } from "./RecentChats";
 import { MessageSearchPopover, TimelineRail } from "../native/NativePanels";
 import { ModelMenu } from "./ModelMenu";
+import { RuntimePanelBody } from "./RuntimePanel";
 import "./slim.css";
 
 /**
@@ -103,7 +104,6 @@ export function SlimApp({
   const projectsShown = projects.filter((project) =>
     ordered.some((s) => s.projectId === project.id),
   );
-  const archivedCount = sessions.filter((s) => s.archived).length;
 
   return (
     <div
@@ -158,12 +158,7 @@ export function SlimApp({
                 aria-pressed={showArchived}
                 onClick={() => setShowArchived((v) => !v)}
               >
-                <span className="slim-icon-wrap">
-                  <Archive size={14} />
-                  {archivedCount > 0 && !showArchived && (
-                    <span className="slim-badge-count">{archivedCount}</span>
-                  )}
-                </span>
+                <Archive size={14} />
               </button>
               {!showArchived && (
                 <button
@@ -552,79 +547,59 @@ export function SlimApp({
               </div>
             </form>
 
-            {panel && (
-              <aside className="inspector slim-inspector">
-                <div className="panel-heading">
-                  <h2>
-                    {panel === "trace"
-                      ? zh
-                        ? "执行轨迹"
-                        : "Execution trace"
-                      : panel === "runtime"
-                        ? zh
-                          ? "运行时与上下文"
-                          : "Runtime and context"
-                        : zh
-                          ? "项目文件"
-                          : "Project files"}
-                  </h2>
-                  <button
-                    className="icon-button"
-                    onClick={() => setPanel("")}
-                    aria-label={zh ? "关闭面板" : "Close panel"}
-                  >
-                    <CloseIcon />
-                  </button>
-                </div>
-                {panel === "runtime" && (
-                  <>
-                    <div className="stat-row">
-                      <span>{zh ? "模型" : "Model"}</span>
-                      {/* Read-only here: the composer menu owns the choice. */}
-                      <strong>{model}</strong>
-                    </div>
-                    <div className="stat-row">
-                      <span>{zh ? "上下文" : "Context"}</span>
-                      <strong>
-                        {supports.contextPercent}% / {supports.contextWindow}
-                      </strong>
-                    </div>
-                    <div className="stat-row">
-                      <span>{zh ? "输入 / 输出" : "Input / output"}</span>
-                      <strong>234k / 1.1k</strong>
-                    </div>
-                    <div className="stat-row">
-                      <span>{zh ? "工具调用" : "Tool calls"}</span>
-                      <strong>19</strong>
-                    </div>
-                    <div className="stat-row">
-                      <span>{zh ? "缓存命中" : "Cache hit"}</span>
-                      <strong>98%</strong>
-                    </div>
-                    <p className="muted slim-note">
-                      {zh
-                        ? "模型与思考深度只在输入框下方选择；这个面板只做只读诊断，不再放一份重复的下拉。"
-                        : "Model and thinking level are chosen below the input only. This panel is read-only diagnostics instead of a second copy of the same dropdowns."}
-                    </p>
-                  </>
-                )}
-                {panel === "trace" && (
-                  <p className="muted slim-note">
-                    {zh
-                      ? "执行轨迹面板（演示占位）：与原版同一个面板，不再与“诊断”面板争夺同一块右侧空间。"
-                      : "Execution trace panel (placeholder): same panel as the original, but it no longer competes with a separate diagnostics panel for the same right-hand space."}
-                  </p>
-                )}
-                {panel === "files" && (
-                  <p className="muted slim-note">
-                    {zh
-                      ? "项目文件面板（演示占位）。"
-                      : "Project files panel (placeholder)."}
-                  </p>
-                )}
-              </aside>
-            )}
           </div>
+
+          {panel && (
+          <aside className="inspector slim-inspector">
+            <div className="panel-heading">
+              <h2>
+                {panel === "trace"
+                  ? zh
+                    ? "执行轨迹"
+                    : "Execution trace"
+                  : panel === "runtime"
+                    ? zh
+                      ? "运行时与上下文"
+                      : "Runtime and context"
+                    : zh
+                      ? "项目文件"
+                      : "Project files"}
+              </h2>
+              <button
+                className="icon-button"
+                onClick={() => setPanel("")}
+                aria-label={zh ? "关闭面板" : "Close panel"}
+              >
+                <CloseIcon />
+              </button>
+            </div>
+            {panel === "runtime" && (
+              /* The full runtime panel from the original build, reused
+                 as-is: read-aloud toggle, provider management, model and
+                 thinking selects, context meter and the per-tool enable
+                 list. Only the entry point moved (into the model menu). */
+              <RuntimePanelBody
+                language={language}
+                model={model}
+                onModel={setModel}
+              />
+            )}
+            {panel === "trace" && (
+              <p className="muted slim-note">
+                {zh
+                  ? "执行轨迹面板（演示占位）：与原版同一个面板，不再与“诊断”面板争夺同一块右侧空间。"
+                  : "Execution trace panel (placeholder): same panel as the original, but it no longer competes with a separate diagnostics panel for the same right-hand space."}
+              </p>
+            )}
+            {panel === "files" && (
+              <p className="muted slim-note">
+                {zh
+                  ? "项目文件面板（演示占位）。"
+                  : "Project files panel (placeholder)."}
+              </p>
+            )}
+          </aside>
+          )}
         </main>
       </section>
 
