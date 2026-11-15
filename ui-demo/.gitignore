@@ -1,0 +1,14 @@
+# Dependencies (the demo symlinks rpi-web's node_modules)
+node_modules
+
+# Build output
+dist
+
+# rpi session history and uploads: local working data, never published.
+# This directory contains full conversation transcripts and uploaded files.
+.rpi
+
+# Editor / OS noise
+.DS_Store
+*.log
+vite.config.ts.timestamp-*

@@ -1,0 +1,60 @@
+name: Deploy demo to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a newer commit supersede an in-flight deploy, but never cancel a running
+# deploy halfway: Pages can be left serving a partial artifact.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ui-demo/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ui-demo
+        # --ignore-scripts: the only install script in the tree is esbuild's
+        # binary fetch, which npm 12 blocks by default. esbuild resolves its
+        # platform binary from the optional dependency instead, so the build
+        # works without running it. Verbatim CI check: `npm ci --ignore-scripts`
+        # then `npx vite build` succeeds with the same output hashes as local.
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Build
+        working-directory: ui-demo
+        run: npm run build
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          # The Vite config sets base: "./", so the bundle works when served
+          # from a /<repo>/ subpath without a per-repo base override.
+          path: ui-demo/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

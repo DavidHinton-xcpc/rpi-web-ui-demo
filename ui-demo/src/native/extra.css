@@ -1,0 +1,48 @@
+/* Helper styles for the demo-only panel bodies (file list, trace list). The
+   surrounding chrome is stock rpi-web CSS. */
+.slim-file-list {
+  margin: 0;
+  padding: 6px 8px;
+  list-style: none;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.slim-file-list li {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 6px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+.slim-file-list li.active {
+  background: var(--hover);
+  color: var(--text);
+}
+.slim-trace-list {
+  margin: 0;
+  padding: 0 0 0 14px;
+  list-style: none;
+  border-left: 1px solid var(--line);
+  font-size: 11.5px;
+}
+.slim-trace-list li {
+  display: grid;
+  gap: 2px;
+  padding: 6px 0;
+  color: var(--text);
+}
+.slim-trace-list small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+/* Baseline reproduction of the hover-reveal defect in the current build.
+   `.project-new-session` and `.session-menu-trigger` fade in via
+   `opacity: 0` + `:hover` / `:focus-within` in desktop.css, but opacity does not
+   remove a control from the hit-test tree. Two consequences:
+     1. the "+" stays visible after the collapse chevron is clicked, because the
+        clicked chevron keeps keyboard focus inside `.project-group-header`
+        (`headerHover: false, headerFocusWithin: true`), and
+     2. even at opacity 0 the button is clickable — a click creates a session.
+   Kept verbatim so the demo shows the real behaviour; `slim.css` fixes it. */

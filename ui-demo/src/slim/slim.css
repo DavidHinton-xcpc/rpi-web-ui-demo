@@ -1,0 +1,246 @@
+/* Additions for the slim variant. Everything visual inherits the stock
+   stylesheet; these rules only cover the handful of new nodes. */
+
+.slim .project-tree.slim-tree {
+  padding-bottom: 8px;
+}
+
+.slim-project-count {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 0 4px;
+  color: var(--muted);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+}
+
+/* The single footer entry. Same metrics as .utility-nav button so the sidebar
+   rhythm is unchanged. */
+.slim-bottom {
+  border-top: 1px solid var(--line);
+  padding: 8px 3px 2px;
+}
+.slim-settings {
+  width: 100%;
+  justify-content: flex-start;
+  gap: 10px;
+  min-height: 31px;
+  padding: 8px 9px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+}
+.slim-settings:hover:not(:disabled) {
+  background: var(--hover);
+  color: var(--text);
+}
+.slim-settings kbd {
+  margin-left: auto;
+  opacity: 0.65;
+}
+
+/* Composer: drop the always-on tutorial row and keep one metric line. */
+.slim-composer textarea {
+  min-height: 72px;
+}
+.slim-metrics {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 6px 2px 1px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.slim-metrics-sep {
+  opacity: 0.5;
+}
+.slim-metrics-more {
+  margin-left: auto;
+  padding: 2px 4px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+}
+.slim-metrics-more:hover:not(:disabled) {
+  background: transparent;
+  color: var(--text);
+  text-decoration: underline;
+}
+
+/* The right-hand rail is one panel at a time; keep it out of the flex flow so
+   the transcript width does not jump between panels. */
+.slim .chat-layout {
+  position: relative;
+}
+.slim-inspector {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 12;
+  width: 300px;
+  flex: none;
+  box-shadow: -14px 0 28px -22px #0009;
+}
+.slim-note {
+  margin-top: 16px;
+  font-size: 11px;
+  line-height: 1.75;
+}
+.slim .conversation-column {
+  padding-right: 0;
+}
+.slim .transcript-frame {
+  padding-right: 0;
+}
+
+/* Sidebar bottom row for the slim variant: one line, nothing else. */
+.slim .sidebar {
+  padding-bottom: 8px;
+}
+
+/* Recent chats as a small floating window.
+   Chrome copied from .message-search so the two popovers read as the same
+   component family; the list is the cross-project recency view. */
+.slim-search {
+  color: var(--muted);
+}
+.slim-search.active {
+  background: var(--hover);
+  color: var(--text);
+}
+.slim-recent {
+  position: fixed;
+  /* Sit beside the sidebar, not over it: the tree stays fully usable while the
+     window is open, which is the point of making it a window. */
+  top: 60px;
+  left: calc(var(--sidebar-width, 248px) + 8px);
+  z-index: 100;
+  display: flex;
+  width: 320px;
+  max-height: min(430px, calc(100dvh - 150px));
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.slim-recent-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 36px;
+  padding: 4px 6px 4px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 10.5px;
+  font-weight: 500;
+}
+.slim-recent-heading > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.slim-recent-heading .icon-button {
+  width: 26px;
+  height: 26px;
+}
+.slim-recent-list {
+  display: grid;
+  gap: 1px;
+  padding: 5px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+.slim-recent-option {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  min-width: 0;
+  padding: 6px 7px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  font-size: 11px;
+  text-align: left;
+  cursor: pointer;
+}
+.slim-recent-option:hover {
+  background: var(--hover);
+}
+.slim-recent-option.selected {
+  background: var(--hover);
+  color: var(--blue-text);
+}
+.slim-recent-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slim-recent-project {
+  flex: 0 0 auto;
+  max-width: 76px;
+  overflow: hidden;
+  padding: 1px 4px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--soft);
+  color: var(--muted);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slim-recent-option > svg {
+  flex: 0 0 auto;
+  color: var(--muted);
+}
+
+
+/* ---------------------------------------------------------------------------
+   Fix: hover-revealed row actions must not (a) stay visible after the click
+   that revealed them, or (b) be clickable while invisible.
+
+   The stock rule in desktop.css is `opacity: 0` plus
+   `:hover` / `:focus-within`. Two problems:
+     - opacity does not remove a control from the hit-test tree, so an invisible
+       "+" still creates a session when clicked;
+     - clicking the collapse chevron leaves keyboard focus inside
+       `.project-group-header`, so `:focus-within` keeps the "+" visible with
+       the pointer nowhere near it
+       (measured: headerHover=false, headerFocusWithin=true, opacity=1).
+
+   Fix: hidden controls get `pointer-events: none`, and keyboard reveal keys off
+   `:focus-visible` instead of `:focus-within`. A mouse click does not match
+   `:focus-visible`, so nothing is pinned; tabbing into the row still reveals
+   the actions.
+   --------------------------------------------------------------------------- */
+.slim .project-group-header .project-new-session,
+.slim .project-session .session-menu-trigger {
+  opacity: 0;
+  pointer-events: none;
+}
+.slim .project-group-header:hover .project-new-session,
+.slim .project-group-header:hover .project-menu-trigger,
+.slim .project-group-header:has(:focus-visible) .project-new-session,
+.slim .project-group-header:has(:focus-visible) .project-menu-trigger,
+.slim .project-group-header .project-menu-trigger[aria-expanded="true"],
+.slim .project-session:hover .session-menu-trigger,
+.slim .project-session:has(:focus-visible) .session-menu-trigger,
+.slim .project-session .session-menu-trigger[aria-expanded="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}

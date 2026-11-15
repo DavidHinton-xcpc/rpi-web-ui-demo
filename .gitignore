@@ -1,0 +1,6 @@
+# rpi workspace data: session transcripts and uploads. Local only, never published.
+.rpi/
+
+# The demo has its own .gitignore; keep build output and deps out of the root too.
+ui-demo/node_modules
+ui-demo/dist
