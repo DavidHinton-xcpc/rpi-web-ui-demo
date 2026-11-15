@@ -26,10 +26,11 @@ import {
   Sun,
   Moon,
 } from "lucide-react";
-import { type Language, projects, sessions, supports, transcript } from "../data";
+import { type Language, models, projects, sessions, supports, transcript } from "../data";
 import { Mark, ToolRow } from "../shared";
 import { RecentChats } from "./RecentChats";
 import { MessageSearchPopover, TimelineRail } from "../native/NativePanels";
+import { ModelMenu } from "./ModelMenu";
 import "./slim.css";
 
 /**
@@ -73,6 +74,7 @@ export function SlimApp({
   const [showArchived, setShowArchived] = useState(false);
   const [immersive, setImmersive] = useState(false);
   const [messageSearchOpen, setMessageSearchOpen] = useState(false);
+  const [model, setModel] = useState(models[0].id);
 
   // Ctrl / ⌘ K is advertised in Settings; here it actually opens the recent
   // chats window instead of doing nothing.
@@ -379,15 +381,6 @@ export function SlimApp({
               <TraceIcon />
             </button>
             <button
-              className={`icon-button ${panel === "runtime" ? "selected" : ""}`}
-              aria-label={zh ? "运行时与上下文" : "Runtime and context"}
-              title={zh ? "运行时与上下文" : "Runtime and context"}
-              aria-pressed={panel === "runtime"}
-              onClick={() => setPanel(panel === "runtime" ? "" : "runtime")}
-            >
-              <GaugeIcon />
-            </button>
-            <button
               className={`icon-button ${panel === "files" ? "selected" : ""}`}
               aria-label={zh ? "项目文件" : "Project files"}
               title={zh ? "项目文件" : "Project files"}
@@ -492,18 +485,12 @@ export function SlimApp({
                     >
                       <Paperclip size={14} />
                     </button>
-                    <div className="dropdown-anchor" data-dropdown="true">
-                      <button
-                        type="button"
-                        className="composer-model"
-                        aria-haspopup="listbox"
-                        aria-expanded="false"
-                        title={zh ? "选择模型" : "Choose model"}
-                      >
-                        <span>{supports.model}</span>
-                        <ChevronDown size={11} />
-                      </button>
-                    </div>
+                    <ModelMenu
+                      language={language}
+                      value={model}
+                      onChange={setModel}
+                      onOpenRuntime={() => setPanel("runtime")}
+                    />
                     <div className="dropdown-anchor" data-dropdown="true">
                       <button
                         type="button"
@@ -593,7 +580,8 @@ export function SlimApp({
                   <>
                     <div className="stat-row">
                       <span>{zh ? "模型" : "Model"}</span>
-                      <strong>{supports.model}</strong>
+                      {/* Read-only here: the composer menu owns the choice. */}
+                      <strong>{model}</strong>
                     </div>
                     <div className="stat-row">
                       <span>{zh ? "上下文" : "Context"}</span>
@@ -849,25 +837,6 @@ function TraceIcon() {
   );
 }
 
-function GaugeIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="17"
-      height="17"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="m12 14 4-4" />
-      <path d="M3.34 19a10 10 0 1 1 17.32 0" />
-    </svg>
-  );
-}
 
 function FilesIcon() {
   return (

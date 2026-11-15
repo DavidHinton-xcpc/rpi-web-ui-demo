@@ -103,13 +103,17 @@ not inferred from screenshots:
   heading. The per-project `+` stays.
 - The composer keeps model/thinking and send, drops the shift+enter tutorial and
   the single-value `steer` dropdown, and collapses ten always-on metrics into
-  two plus a "details" jump into the runtime panel.
-- The same eight toolbar entries as the original — immersive view, message
-  search, fork, clone, timeline, trace, runtime, files. What changes is how the
-  four right-hand panels behave: they are rendered as exclusive selections
-  instead of stackable toggles. The separate inspector button is gone because
-  its read-only statistics now live inside the runtime panel, which already read
-  the same state.
+  two plus a "details" jump into the runtime panel. That jump stays next to the
+  numbers it explains; the model menu is the other way in.
+- Seven toolbar entries: immersive view, message search, fork, clone, timeline,
+  trace, files. The four right-hand panels are rendered as exclusive selections
+  instead of stackable toggles, and the separate inspector button is gone because
+  its read-only statistics now live inside the runtime panel.
+- Runtime settings moves to the top of the composer's model menu. Choosing a
+  model and reading its context/tool state is one concern, so the panel is
+  reached from the same control that picks the model rather than from a separate
+  toolbar button. The menu is keyboard-navigable (ArrowDown opens it, arrows walk
+  the runtime row and the model rows as one list, Enter chooses).
 - No fake account block, no refresh icon, no preview badge.
 - Row actions (`+`, `…`) get `pointer-events: none` while hidden, and keyboard
   reveal keys off `:has(:focus-visible)` instead of `:focus-within`, so a click
@@ -164,6 +168,7 @@ src/
     *.css              copied verbatim from the preview build
   slim/
     SlimApp.tsx        reduced chrome
+    ModelMenu.tsx      model picker with the runtime entry on top
     RecentChats.tsx    the floating recent-chats window (Ctrl / ⌘ K)
     slim.css           only the new nodes
 ```

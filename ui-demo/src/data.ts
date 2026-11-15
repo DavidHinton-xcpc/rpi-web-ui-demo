@@ -184,6 +184,13 @@ export const transcript: TranscriptRow[] = [
   },
 ];
 
+/** Model choices offered by the composer picker. Illustrative names only. */
+export const models = [
+  { id: "example-model-large", label: "example-model-large", hint: "demo" },
+  { id: "example-model-fast", label: "example-model-fast", hint: "demo" },
+  { id: "example-model-reasoning", label: "example-model-reasoning", hint: "demo" },
+];
+
 export const supports = {
   model: "example-model-large",
   thinking: "max",

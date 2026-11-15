@@ -277,3 +277,47 @@
   align-items: center;
   justify-content: center;
 }
+
+/* Model picker: the runtime entry sits at the top of the same menu, separated
+   from the model list by the stock .dropdown-group divider. */
+.slim-model-menu {
+  position: fixed;
+  z-index: 90;
+  min-width: 268px;
+  max-width: min(320px, calc(100vw - 24px));
+  padding: 5px;
+}
+.slim-model-runtime {
+  align-items: center;
+}
+.slim-model-runtime-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 550;
+}
+.slim-model-runtime-hint {
+  color: var(--muted);
+  font-size: 10px;
+  white-space: nowrap;
+}
+.slim-model-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slim-model-tail {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+.slim-model-hint {
+  color: var(--muted);
+  font-size: 9.5px;
+}
+/* Keyboard/pointer highlight for the flat row list (runtime row included). */
+.slim-model-menu .dropdown-item[data-active="true"] {
+  background: var(--hover);
+}
