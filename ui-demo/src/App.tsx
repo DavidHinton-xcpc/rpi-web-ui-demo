@@ -230,15 +230,15 @@ const FINDINGS: Record<Language, Finding[]> = {
       verdict: "merge",
       slim: "七个按钮：四个面板画成互斥单选，运行时面板改由模型菜单顶部进入",
       evidence:
-        "实测轨迹、诊断、文件、运行时四个面板互斥——渲染进同一个 aside，打开一个会关掉另一个——却画成四个可叠加的开关，这是唯一的实质问题。沉浸式、消息搜索、分叉、克隆、时间轴全部保留；「诊断」的只读统计并入运行时面板（两者本就读写同一份数据），而运行时的入口搬到模型选择菜单顶部——模型选择和上下文/工具状态是同一件事，分开两个入口等于让用户在两处找同一份设置。",
+        "实测轨迹、诊断、文件、运行时四个面板互斥——渲染进同一个 aside，打开一个会关掉另一个——却画成四个可叠加的开关，这是唯一的实质问题。沉浸式、会话搜索、分叉、克隆、时间轴全部保留；「诊断」的只读统计并入运行时面板（两者本就读写同一份数据），而运行时的入口搬到模型选择菜单顶部——模型选择和上下文/工具状态是同一件事，分开两个入口等于让用户在两处找同一份设置。",
     },
     {
-      area: "Ctrl+K 是假的",
-      native: "设置弹窗里写着「搜索会话 Ctrl / ⌘ K」",
+      area: "Ctrl+K 映射到错的东西",
+      native: "设置里写「搜索会话 Ctrl / ⌘ K」，工具栏却只有「搜索消息」",
       verdict: "keep",
-      slim: "让 Ctrl K 真的打开最近会话浮窗",
+      slim: "Ctrl K 打开跨会话搜索；最近会话浮窗另设入口",
       evidence:
-        "实测按下 Ctrl+K 无任何反应：keydown 处理器只处理 N / B / ,，不存在 k 分支，侧栏也没有任何搜索框（.sidebar input 数量为 0）。文档承诺了快捷键却没接线——补上比删掉提示更好。",
+        "实测按下 Ctrl+K 无任何反应：keydown 处理器只处理 N / B / ,，不存在 k 分支，侧栏也没有任何搜索框。更关键的是原版的「搜索消息」只查当前会话内的消息，与设置里承诺的「搜索会话」（跨会话找会话）是两件事——不能把最近会话浮窗当作这个快捷键的替代品。精简版两者分开：Ctrl K 查会话标题/项目/标签，最近会话是另一个按时间排序的浮窗。",
     },
     {
       area: "「steer」队列类型下拉",
@@ -376,15 +376,15 @@ const FINDINGS: Record<Language, Finding[]> = {
       verdict: "merge",
       slim: "Seven buttons: panels are exclusive, runtime opens from the model menu",
       evidence:
-        "Measured: trace, inspector, files and runtime are mutually exclusive — same aside, opening one closes the others — yet they are drawn as four stackable toggles. That is the only real problem. Immersive, search, fork, clone and timeline all stay. Inspector's read-only stats fold into the runtime panel (both read the same state), and the runtime entry moves to the top of the composer's model menu — choosing a model and reading its context/tool state is one concern, so two separate entry points made users hunt in both places.",
+        "Measured: trace, inspector, files and runtime are mutually exclusive — same aside, opening one closes the others — yet they are drawn as four stackable toggles. That is the only real problem. Immersive, chat search, fork, clone and timeline all stay. Inspector's read-only stats fold into the runtime panel (both read the same state), and the runtime entry moves to the top of the composer's model menu — choosing a model and reading its context/tool state is one concern, so two separate entry points made users hunt in both places.",
     },
     {
-      area: "Ctrl+K is not wired",
-      native: "Settings claims \"Search chats Ctrl / ⌘ K\"",
+      area: "Ctrl+K pointed at the wrong thing",
+      native: "Settings says \"Search chats Ctrl / ⌘ K\", but the toolbar only offers message search",
       verdict: "keep",
-      slim: "Ctrl K actually opens the recent-chats window",
+      slim: "Ctrl K opens cross-session search; recent chats has its own entry",
       evidence:
-        "Measured: Ctrl+K does nothing. The keydown handler only knows N / B / , — no k branch, and the sidebar has zero inputs. The shortcut was documented but never bound; binding it is better than deleting the promise.",
+        "Measured: Ctrl+K does nothing — the keydown handler only knows N / B / , and the sidebar has zero inputs. More importantly, the original's message search looks inside the open conversation, which is not the \"Search chats\" (find a session across projects) that Settings promises. A recency popover is not a substitute. The slim build keeps them separate: Ctrl K searches session titles, projects and tags; Recent chats is a second, time-ordered window.",
     },
     {
       area: "\"steer\" queue-type dropdown",

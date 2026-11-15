@@ -29,9 +29,10 @@ import {
 import { type Language, models, projects, sessions, supports, transcript } from "../data";
 import { Mark, ToolRow } from "../shared";
 import { RecentChats } from "./RecentChats";
-import { MessageSearchPopover, TimelineRail } from "../native/NativePanels";
+import { TimelineRail } from "../native/NativePanels";
 import { ModelMenu } from "./ModelMenu";
 import { RuntimePanelBody } from "./RuntimePanel";
+import { ChatSearch } from "./ChatSearch";
 import "./slim.css";
 
 /**
@@ -74,18 +75,22 @@ export function SlimApp({
   // Restored from the original: archive view, immersive mode, message search.
   const [showArchived, setShowArchived] = useState(false);
   const [immersive, setImmersive] = useState(false);
-  const [messageSearchOpen, setMessageSearchOpen] = useState(false);
+  const [chatSearchOpen, setChatSearchOpen] = useState(false);
   const [model, setModel] = useState(models[0].id);
 
-  // Ctrl / ⌘ K is advertised in Settings; here it actually opens the recent
-  // chats window instead of doing nothing.
+  // Ctrl / ⌘ K is advertised in Settings as "Search chats". In the original it
+  // is never bound; here it opens chat search.
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (!(event.ctrlKey || event.metaKey) || event.altKey) return;
       const key = event.key.toLowerCase();
       if (key === "k") {
         event.preventDefault();
-        setRecentOpen(true);
+        // Settings advertises Ctrl / ⌘ K as "Search chats", so the shortcut
+        // opens chat search — not the recency list. The two popovers share the
+        // same corner of the sidebar, so only one can be open.
+        setRecentOpen(false);
+        setChatSearchOpen(true);
       }
     };
     window.addEventListener("keydown", onKeyDown);
@@ -130,11 +135,13 @@ export function SlimApp({
             <button
               className={`sidebar-new-chat slim-search${recentOpen ? " active" : ""}`}
               aria-expanded={recentOpen}
-              onClick={() => setRecentOpen((open) => !open)}
+              onClick={() => {
+                setChatSearchOpen(false);
+                setRecentOpen((open) => !open);
+              }}
             >
               <Clock3 size={16} />
               <span>{zh ? "最近会话" : "Recent chats"}</span>
-              <kbd>Ctrl K</kbd>
             </button>
           </div>
 
@@ -311,13 +318,12 @@ export function SlimApp({
               <h1 title={current.title}>{current.title}</h1>
             </div>
           </div>
-          {/* Kept: fork, clone, timeline, then the three exclusive panels.
-              Dropped: immersive view (the sidebar toggle already collapses the
-              chrome) and message search (moved to the Recent-chats window's
-              sibling shortcut, Ctrl / ⌘ K). */}
+          {/* Immersive, chat search, fork, clone, timeline, then the exclusive
+              panels. Chat search finds sessions across all projects — the thing
+              Settings promises with Ctrl / ⌘ K — as opposed to the original's
+              message search, which only looks inside the open conversation. */}
           <div className="toolbar-actions">
-            {/* Restored from the original: immersive reading mode and message
-                search. Immersive is a mode (stays pressed, hides the chrome),
+            {/* Immersive is a mode (stays pressed, hides the chrome); chat
                 search is an overlay that can sit alongside a panel. */}
             <button
               type="button"
@@ -331,11 +337,15 @@ export function SlimApp({
             </button>
             <button
               type="button"
-              className={`icon-button ${messageSearchOpen ? "selected" : ""}`}
-              aria-label={zh ? "搜索消息" : "Search messages"}
-              title={zh ? "搜索消息" : "Search messages"}
-              aria-pressed={messageSearchOpen}
-              onClick={() => setMessageSearchOpen((v) => !v)}
+              className={`icon-button ${chatSearchOpen ? "selected" : ""}`}
+              aria-label={zh ? "搜索会话" : "Search chats"}
+              title={zh ? "搜索会话（标题 / 项目 / 标签）" : "Search chats (title, project, tag)"}
+              aria-pressed={chatSearchOpen}
+              aria-expanded={chatSearchOpen}
+              onClick={() => {
+                setRecentOpen(false);
+                setChatSearchOpen((v) => !v);
+              }}
             >
               <Search size={17} />
             </button>
@@ -390,7 +400,27 @@ export function SlimApp({
         <main className="main-content chat-layout">
           <div className="conversation-column">
             <div className="transcript-frame">
-              {messageSearchOpen && <MessageSearchPopover language={language} />}
+              {chatSearchOpen && (
+                <ChatSearch
+                  language={language}
+                  activeId={activeId}
+                  onSelect={(id) => {
+                    const session = sessions.find((x) => x.id === id);
+                    if (!session) return;
+                    setActiveId(id);
+                    setActiveProject(session.projectId);
+                    // A search hit may live in a collapsed project or the
+                    // archived set; open both so the row is actually visible.
+                    setCollapsed((prev) => {
+                      const next = new Set(prev);
+                      next.delete(session.projectId);
+                      return next;
+                    });
+                    setShowArchived(Boolean(session.archived));
+                  }}
+                  onClose={() => setChatSearchOpen(false)}
+                />
+              )}
               {timelineOpen && <TimelineRail language={language} />}
               <div className="transcript">
                 <div className="message-list">

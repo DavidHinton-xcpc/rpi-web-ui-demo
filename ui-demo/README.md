@@ -94,18 +94,23 @@ not inferred from screenshots:
 - Archive and immersive view are kept. Archive is a filter over the same project
   tree (toggled from the Projects heading) rather than a separate screen, so the
   tree keeps its position while the set changes. No count badge is shown.
-- Recent chats becomes a small floating window (same chrome as the
-  message-search card) opened from a sidebar button or `Ctrl / ⌘ K` — the
-  shortcut Settings already advertised but never bound. It sits beside the
-  sidebar rather than over it, so the tree stays usable, and Escape / outside
-  click / picking a row all close it.
+- Recent chats becomes a small floating window on the sidebar. It sits beside
+  the sidebar rather than over it, so the tree stays usable, and Escape /
+  outside click / picking a row all close it.
+- **Chat search** is a separate function: it finds *sessions* across projects,
+  not messages inside the open conversation. It matches session titles, project
+  names and tags, is opened from the toolbar or `Ctrl / ⌘ K` (the shortcut
+  Settings advertises but the original never binds), and is keyboard navigable
+  (arrows, Enter, Escape). A hit in a collapsed project or the archived set
+  switches that view on so the row is visible. The original build's
+  message search only looks inside one conversation — a different feature.
 - The two duplicate "add project" affordances collapse to one, in the section
   heading. The per-project `+` stays.
 - The composer keeps model/thinking and send, drops the shift+enter tutorial and
   the single-value `steer` dropdown, and collapses ten always-on metrics into
   two plus a "details" jump into the runtime panel. That jump stays next to the
   numbers it explains; the model menu is the other way in.
-- Seven toolbar entries: immersive view, message search, fork, clone, timeline,
+- Seven toolbar entries: immersive view, chat search, fork, clone, timeline,
   trace, files. The four right-hand panels are rendered as exclusive selections
   instead of stackable toggles, and the separate inspector button is gone because
   its read-only statistics now live inside the runtime panel.
@@ -174,6 +179,7 @@ src/
     SlimApp.tsx        reduced chrome
     ModelMenu.tsx      model picker with the runtime entry on top
     RuntimePanel.tsx   the full runtime panel
-    RecentChats.tsx    the floating recent-chats window (Ctrl / ⌘ K)
+    RecentChats.tsx    the floating recent-chats window
+    ChatSearch.tsx     cross-session search (Ctrl / ⌘ K)
     slim.css           only the new nodes
 ```

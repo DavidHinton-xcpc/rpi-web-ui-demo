@@ -303,3 +303,149 @@
   accent-color: var(--blue);
   margin: 0;
 }
+
+/* Chat search: finds sessions across projects. Same popover chrome family as
+   the recent-chats window and the original message search, but the payload is
+   a session list with the match context (project, tags, archived/running). */
+.slim-chat-search {
+  position: fixed;
+  /* Beside the sidebar, not over it: the sidebar's "Recent chats" button sits
+     at y=136 and was being intercepted when this panel anchored at left:12.
+     Match the recent-chats window's anchor so the whole tree stays usable. */
+  top: 60px;
+  left: calc(var(--sidebar-width, 248px) + 8px);
+  z-index: 100;
+  display: flex;
+  width: 360px;
+  max-height: min(460px, calc(100dvh - 150px));
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.slim-chat-search-field {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 6px 8px 11px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+}
+.slim-chat-search-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 12px;
+  outline: none;
+}
+/* The global rule in the stock stylesheet draws a 3px outline on
+   input:focus-visible, which in the desktop palette resolves to near-black and
+   reads as an error state on this field. The wrapper already shows focus through
+   the border, so the field itself needs none. */
+.slim .slim-chat-search-field input:focus,
+.slim .slim-chat-search-field input:focus-visible,
+.slim-chat-search .slim-chat-search-field input:focus-visible {
+  /* Three stock rules compete here (global 3px, .workspace 1px and 2px rings).
+     The field is a plain text input inside a bordered wrapper that already
+     shows focus, so force none rather than trying to outrank all of them. */
+  outline: none !important;
+  outline-style: none !important;
+  outline-width: 0 !important;
+  outline-offset: 0 !important;
+  box-shadow: none;
+  border: 0;
+}
+.slim-chat-search-field:focus-within {
+  border-bottom-color: var(--muted);
+}
+.slim-chat-search-field .icon-button {
+  width: 24px;
+  height: 24px;
+}
+.slim-chat-search-list {
+  display: grid;
+  gap: 1px;
+  padding: 5px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+.slim-chat-search-option {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  min-width: 0;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  font-size: 11px;
+  text-align: left;
+  cursor: pointer;
+}
+.slim-chat-search-option.selected {
+  background: var(--hover);
+}
+.slim-chat-search-copy {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 2px;
+}
+.slim-chat-search-copy strong {
+  overflow: hidden;
+  font-size: 11.5px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slim-chat-search-copy small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 9.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slim-chat-search-tag {
+  flex: 0 0 auto;
+  padding: 1px 4px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--soft);
+  color: var(--muted);
+  font-size: 9px;
+}
+.slim-chat-search-option > svg {
+  flex: 0 0 auto;
+  color: var(--muted);
+}
+.slim-chat-search-empty {
+  margin: 0;
+  padding: 16px;
+  color: var(--muted);
+  font-size: 11.5px;
+  text-align: center;
+}
+.slim-chat-search-foot {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin: 0;
+  padding: 6px 11px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 9.5px;
+}
+.slim-chat-search-foot kbd {
+  padding: 1px 4px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  font-size: 9px;
+}
